@@ -18,6 +18,7 @@ class test_add_contact(unittest.TestCase):
         wd.get("http://localhost/addressbook/")
 
     def login(self, wd, username, password):
+        self.open_homepage(wd)
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -113,7 +114,6 @@ class test_add_contact(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        self.open_homepage(wd)
         self.login(wd, username="admin", password="secret")
         self.create_contact(wd, Contact(first_name="Pavel", middle_name="Ivanovich", surname="Kolosov", avatar="C:\\Users\\slaterr\\Pictures\\avatar.jpg", nickname="Kolos",
                             title="Mr", company_name="Cobelco", address="85, Queen street, Auckland, New Zealand", land_line="+642223334455",
