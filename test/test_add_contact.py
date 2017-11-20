@@ -11,7 +11,6 @@ def ent(request):
     request.addfinalizer(fixture.destroy)
     return fixture
 
-
 def test_add_contact(ent):
         ent.login(username="admin", password="secret")
         ent.create_contact(Contact(first_name="Pavel", middle_name="Ivanovich", surname="Kolosov", avatar="C:\\Users\\slaterr\\Pictures\\avatar.jpg", nickname="Kolos",
@@ -23,4 +22,5 @@ def test_add_contact(ent):
                             anniversary_month="//div[@id='content']/form/select[4]//option[2]", anniversary_year="1999",
                             second_address="30 Orakau Avenue, Epsom, Auckland, New Zealand ", land_line_2="+645556667788", notes="Skype ID: kolos1980"))
         ent.logout()
+
 
