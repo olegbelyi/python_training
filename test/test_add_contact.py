@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import pytest
-from contact import Contact
-from entry import Entry
+
+from fixture.entry import Entry
+from model.contact import Contact
+
 
 @pytest.fixture
 def ent(request):
