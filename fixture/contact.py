@@ -3,11 +3,19 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
+    def open_homepage(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("home").click()
+
     def create(self, contact):
         wd = self.app.wd
+        self.open_homepage()
         # init contact creation
         wd.find_element_by_link_text("add new").click()
         self.fill_contact_form(contact)
+        self.add_avatar(contact)
+        self.change_birth_date(contact)
+        self.change_anniversary_date(contact)
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
@@ -16,7 +24,6 @@ class ContactHelper:
         self.change_field_value("firstname", contact.first_name)
         self.change_field_value("middlename", contact.middle_name)
         self.change_field_value("lastname", contact.surname)
-        self.add_avatar(contact)
         self.change_field_value("nickname", contact.nickname)
         self.change_field_value("title", contact.title)
         self.change_field_value("company", contact.company_name)
@@ -29,9 +36,9 @@ class ContactHelper:
         self.change_field_value("email2", contact.email_2)
         self.change_field_value("email3", contact.email_3)
         self.change_field_value("homepage", contact.homepage)
-        self.change_birth_date(contact)
+        # self.change_birth_date(contact)
         self.change_field_value("byear", contact.birthday_year)
-        self.change_anniversary_date(contact)
+        # self.change_anniversary_date(contact)
         self.change_field_value("ayear", contact.anniversary_year)
         self.change_field_value("address2", contact.second_address)
         self.change_field_value("phone2", contact.land_line_2)
@@ -45,6 +52,19 @@ class ContactHelper:
         if not wd.find_element_by_xpath(contact.anniversary_month).is_selected():
             wd.find_element_by_xpath(contact.anniversary_month).click()
 
+    def modify_first_contact_anniversary_date(self, contact):
+        wd = self.app.wd
+        self.select_first_contact()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        if not wd.find_element_by_xpath(contact.anniversary_day).is_selected():
+            wd.find_element_by_xpath(contact.anniversary_day).click()
+        if not wd.find_element_by_xpath(contact.anniversary_month).is_selected():
+            wd.find_element_by_xpath(contact.anniversary_month).click()
+        wd.find_element_by_name("ayear").click()
+        wd.find_element_by_name("ayear").clear()
+        wd.find_element_by_name("ayear").send_keys(contact.anniversary_year)
+        wd.find_element_by_name("update").click()
+
     def change_birth_date(self, contact):
         wd = self.app.wd
         if not wd.find_element_by_xpath(contact.birthday_day).is_selected():
@@ -52,9 +72,29 @@ class ContactHelper:
         if not wd.find_element_by_xpath(contact.birthday_month).is_selected():
             wd.find_element_by_xpath(contact.birthday_month).click()
 
+    def modify_first_contact_birthday(self, contact):
+        wd = self.app.wd
+        self.select_first_contact()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        if not wd.find_element_by_xpath(contact.birthday_day).is_selected():
+            wd.find_element_by_xpath(contact.birthday_day).click()
+        if not wd.find_element_by_xpath(contact.birthday_month).is_selected():
+            wd.find_element_by_xpath(contact.birthday_month).click()
+        wd.find_element_by_name("byear").click()
+        wd.find_element_by_name("byear").clear()
+        wd.find_element_by_name("byear").send_keys(contact.birthday_year)
+        wd.find_element_by_name("update").click()
+
     def add_avatar(self, contact):
         wd = self.app.wd
         wd.find_element_by_name("photo").send_keys(contact.avatar)
+
+    def modify_first_contact_avatar(self, contact):
+        wd = self.app.wd
+        self.select_first_contact()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        wd.find_element_by_name("photo").send_keys(contact.avatar)
+        wd.find_element_by_name("update").click()
 
     def change_field_value(self, field_name, text):
         wd = self.app.wd
@@ -65,14 +105,14 @@ class ContactHelper:
 
     def modify_first_contact(self, new_contact_data):
         wd = self.app.wd
+        self.open_homepage()
         self.select_first_contact()
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         # open modification form
-        wd.find_element_by_link_text("add new").click()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         # fill contact form
         self.fill_contact_form(new_contact_data)
         # submit modification
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        wd.find_element_by_name("update").click()
 
     def select_first_contact(self):
         wd = self.app.wd
@@ -81,8 +121,8 @@ class ContactHelper:
 
     def delete_first_contact(self):
          wd = self.app.wd
-         # select first contact
-         wd.find_element_by_name("selected[]").click()
+         self.open_homepage()
+         self.select_first_contact()
          # submit deletion
          wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
          wd.switch_to_alert().accept()
