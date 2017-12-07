@@ -19,6 +19,16 @@ class ContactHelper:
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
+    def create_light(self, contact):
+        # creation of a contact without avatar and dates
+        wd = self.app.wd
+        self.open_homepage()
+        # init contact creation
+        wd.find_element_by_link_text("add new").click()
+        self.fill_contact_form(contact)
+        # submit contact creation
+        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+
     def fill_contact_form(self, contact):
         wd = self.app.wd
         self.change_field_value("firstname", contact.first_name)
@@ -126,3 +136,8 @@ class ContactHelper:
          # submit deletion
          wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
          wd.switch_to_alert().accept()
+
+    def count(self):
+        wd = self.app.wd
+        self.open_homepage()
+        return len(wd.find_elements_by_name("selected[]"))
