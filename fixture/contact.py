@@ -1,5 +1,6 @@
 from model.contact import Contact
 
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -118,10 +119,14 @@ class ContactHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
-    def modify_first_contact(self, new_contact_data):
+    def modify_first_contact(self, new_group_data):
+        self.modify_contact_by_index(0, new_group_data)
+        self.contact_cache = None
+
+    def modify_contact_by_index(self, index, new_contact_data):
         wd = self.app.wd
         self.open_homepage()
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         # open modification form
         wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         # fill contact form
@@ -133,16 +138,23 @@ class ContactHelper:
     def select_first_contact(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
-        wd = self.app.wd
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+        self.contact_cache = None
+
+    def delete_contact_by_index(self, index):
          wd = self.app.wd
          self.open_homepage()
-         self.select_first_contact()
+         self.select_contact_by_index(index)
          # submit deletion
          wd.find_element_by_xpath("//div[@id='content']/form[2]/div[2]/input").click()
          wd.switch_to_alert().accept()
          self.contact_cache = None
+
+    def select_contact_by_index(self, index):
+         wd = self.app.wd
+         wd.find_elements_by_name("selected[]")[index].click()
 
     def count(self):
         wd = self.app.wd
@@ -158,10 +170,10 @@ class ContactHelper:
             self.contact_cache = []
             for element in wd.find_elements_by_name("entry"):
                 td_value = element.find_elements_by_tag_name("td")
-                text1 = td_value[2].text
-                text2 = td_value[1].text
-                # print (text1 + " " + text2)
+                text1 = td_value[1].text
+                text2 = td_value[2].text
+                print (text2 + " " + text1)
                 id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(first_name=text1, surname=text2, id=id))
+                self.contact_cache.append(Contact(first_name=text2, surname=text1, id=id))
 
-        return list (self.contact_cache)
+        return list(self.contact_cache)
