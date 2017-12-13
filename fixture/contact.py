@@ -128,8 +128,7 @@ class ContactHelper:
         self.open_homepage()
         self.select_contact_by_index(index)
         # open modification form
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
-        # fill contact form
+        wd.find_elements_by_xpath("(//table[@id='maintable']//img[@alt='Edit'])")[index].click()
         self.fill_contact_form(new_contact_data)
         # submit modification
         wd.find_element_by_name("update").click()
@@ -172,7 +171,7 @@ class ContactHelper:
                 td_value = element.find_elements_by_tag_name("td")
                 text1 = td_value[1].text
                 text2 = td_value[2].text
-                print (text2 + " " + text1)
+                #print (text2 + " " + text1)
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.contact_cache.append(Contact(first_name=text2, surname=text1, id=id))
 
