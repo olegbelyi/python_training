@@ -1,5 +1,25 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
+import pytest
+import random
+import string
+
+def random_string(prefix, maxlen):
+    symbols = string.ascii_letters
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+
+testdata = [
+    Contact(first_name=random_string("first_name", 15), surname=random_string("surname", 15))
+    for i in range(10)
+]
+@pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
+def test_add_contact(app, contact):
+        old_contacts = app.contact.get_contact_list()
+        app.contact.create_light(contact)
+        assert len(old_contacts) + 1 == app.contact.count()
+        new_contacts = app.contact.get_contact_list()
+        old_contacts.append(contact)
+        assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
 
 #def test_add_contact(app):
@@ -11,13 +31,3 @@ from model.contact import Contact
       #                             anniversary_day="//div[@id='content']/form/select[3]//option[4]",
        #                            anniversary_month="//div[@id='content']/form/select[4]//option[2]", anniversary_year="1999",
         #                           second_address="30 Orakau Avenue, Epsom, Auckland, New Zealand ", land_line_2="+645556667788", notes="Skype ID: kolos1980"))
-
-
-def test_add_contact(app):
-        old_contacts = app.contact.get_contact_list()
-        contact = Contact(first_name="Pavel", surname="Kolosov")
-        app.contact.create_light(contact)
-        assert len(old_contacts) + 1 == app.contact.count()
-        new_contacts = app.contact.get_contact_list()
-        old_contacts.append(contact)
-        assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
