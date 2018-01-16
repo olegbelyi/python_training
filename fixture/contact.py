@@ -35,6 +35,7 @@ class ContactHelper:
         self.fill_contact_form(contact)
         # submit contact creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.open_homepage()
         self.contact_cache = None
 
     def fill_contact_form(self, contact):
@@ -261,3 +262,24 @@ class ContactHelper:
         else:
             land_line_2 = re.search("P: (.*)", text).group(1)
         return Contact(land_line=land_line, mobile=mobile, work=work, land_line_2=land_line_2)
+
+    def add_contact_to_group(self, contact_id, group_id):
+        wd = self.app.wd
+        self.open_homepage()
+        self.select_contact_by_id(contact_id)
+        # select a group to add contact to
+        wd.find_element_by_css_selector("select[name='to_group']>option[value='%s']" % group_id).click()
+        wd.find_element_by_name("add").click()
+        self.open_homepage()
+        self.contact_cache = None
+
+
+
+    def del_contact_from_group(self, contact_id, group_id):
+        wd = self.app.wd
+        self.open_homepage()
+        wd.find_element_by_css_selector("select[name='group']>option[value='%s']" % group_id).click()
+        self.select_contact_by_id(contact_id)
+        wd.find_element_by_name("remove").click()
+        self.open_homepage()
+        self.contact_cache = None
