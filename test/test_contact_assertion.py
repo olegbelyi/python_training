@@ -14,7 +14,7 @@ def test_contact_info_assertion_on_edit_page(app):
     assert contact_from_home_page.all_phones_from_home_page == merge_phones_like_on_home_page(contact_from_edit_page)
 
 def clear(s):
-    return re.sub("[() -'\n']", "", s)
+    return re.sub("[-() '\n']", "", s)
 
 def merge_phones_like_on_home_page(contact):
     return "\n".join(filter(lambda x: x != "",
