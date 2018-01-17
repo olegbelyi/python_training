@@ -2,8 +2,6 @@ from model.contact import Contact
 import re
 
 
-#db = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
-
 def test_homepage_contacts_info_assertion_with_db(app, db_ORM):
     ui_contacts = sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
     db_contacts = sorted(db_ORM.get_contact_list(), key=Contact.id_or_max)
