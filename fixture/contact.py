@@ -273,9 +273,7 @@ class ContactHelper:
         self.open_homepage()
         self.contact_cache = None
 
-
-
-    def del_contact_from_group(self, contact_id, group_id):
+    def remove_contact_from_group(self, contact_id, group_id):
         wd = self.app.wd
         self.open_homepage()
         wd.find_element_by_css_selector("select[name='group']>option[value='%s']" % group_id).click()

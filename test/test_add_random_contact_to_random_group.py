@@ -12,6 +12,9 @@ def test_add_contact_to_group(app, db_ORM):
     groups = db_ORM.get_group_list()
     contact = random.choice(contacts)
     group = random.choice(groups)
+    if len(db_ORM.get_contact_list()) == len(db_ORM.get_contacts_in_group(group)):
+        app.contact.create_light(Contact(first_name="test_name"))
+        contact = db_ORM.get_contacts_not_in_group(group)[0]
     old_group_contacts = db_ORM.get_contacts_in_group(group)
     app.contact.add_contact_to_group(contact.id, group.id)
     new_group_contacts = db_ORM.get_contacts_in_group(group)
